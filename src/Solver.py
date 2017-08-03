@@ -126,12 +126,12 @@ class Solver:
 			
 			#List of the new config
 			list_config_size_str2 = set()
-	 		list_config_size_2 = []
+			list_config_size_2 = []
 
-	 		for config in list_config_size1:
+			for config in list_config_size1:
 
-	 			#Adjacent Nodes
-	 			for node in dict_configurations[config]["adjacent_nodes"]:
+				#Adjacent Nodes
+				for node in dict_configurations[config]["adjacent_nodes"]:
 
 					#Update the config
 					new_config = config
@@ -313,6 +313,5 @@ class Solver:
 			complete_parents.update(partial_parents)
 		
 		return list(complete_parents)
-
 
 

@@ -36,7 +36,7 @@ class SolverTestCaseWatts(unittest.TestCase):
 		self.params = params
 		self.solver = Solver(params)
 		self.Q = self.solver.get_probabilities_Q()
-
+		print(self.Q)
 
 	def test_response_function(self):
 
