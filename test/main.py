@@ -4,7 +4,7 @@ import sys
 from types import *
 import numpy as np
 
-sys.path.append('../src/')
+sys.path.append('src/')
 from Solver import Solver
 from ResponseFunction import ResponseFunction
 
@@ -12,7 +12,7 @@ class SolverTestCaseWatts(unittest.TestCase):
 	
 	def setUp(self):
 		params = {
-			"edgelist_path" : "./edgelist.txt",
+			"edgelist_path" : "./test/edgelist.txt",
 			"response_function": [
 				{	
 					"name": "bond",
@@ -66,8 +66,6 @@ class SolverTestCaseWatts(unittest.TestCase):
 
 		# Must add a margin of error
 		self.assertTrue(np.abs(prob_sum-1.0)<1e-8)
-
-
 
 
 if __name__ == '__main__':
