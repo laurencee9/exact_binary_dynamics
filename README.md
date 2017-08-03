@@ -1,5 +1,7 @@
 # Exact analytical solution of irreversible binary dynamics on networks
 
+[![Build Status](https://travis-ci.com/laurencee9/exact_binary_dynamics.svg?token=G5JxCbxXbihVEq3Yzsxg&branch=master)](https://travis-ci.com/laurencee9/exact_binary_dynamics)
+
 A python implementation of the exact solution of irreversible binary dynamics on networks.
 
 ## Table of content

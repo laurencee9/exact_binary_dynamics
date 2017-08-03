@@ -9,6 +9,7 @@ from Solver import Solver
 from ResponseFunction import ResponseFunction
 
 class SolverTestCaseWatts(unittest.TestCase):
+	
 	def setUp(self):
 		params = {
 			"edgelist_path" : "./edgelist.txt",
@@ -36,7 +37,7 @@ class SolverTestCaseWatts(unittest.TestCase):
 		self.params = params
 		self.solver = Solver(params)
 		self.Q = self.solver.get_probabilities_Q()
-		print(self.Q)
+
 
 	def test_response_function(self):
 
@@ -65,13 +66,6 @@ class SolverTestCaseWatts(unittest.TestCase):
 
 		# Must add a margin of error
 		self.assertTrue(np.abs(prob_sum-1.0)<1e-8)
-
-
-
-
-
-
-
 
 
 

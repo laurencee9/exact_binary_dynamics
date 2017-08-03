@@ -1,7 +1,6 @@
 import networkx as nx
 import numpy as np
 import itertools as it
-import matplotlib.pyplot as plt
 from ResponseFunction import ResponseFunction as RF
 
 
