@@ -81,3 +81,64 @@ params = {
 In each element of `params["response_function"]`, you must declare the name of the response function and the nodes that apply to. 
 
 
+
+
+## Symbolic results
+
+It is possible to output the result in a symbolic form. In this case, you do not need to specify the response functions
+
+```
+	params = {
+		"edgelist_path" : "./edgelist.txt",
+		"symbolic"      : True
+	}
+
+	solver = Solver(params)
+	Q = solver.get_probabilities_Q()
+
+```
+The output will look like
+
+
+```
+'00001' : '<prod><add>1;-<div><prod>G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)</prod>;<prod>G(0,0);G(1,0);G(2,0.0);G(3,0.0);</prod></div>;</add>;<prod>G(0,0);G(1,1);G(2,0.0);G(3,0.0);</prod></prod>',
+'00000' : '<prod>G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)</prod>',
+'00100' : '<prod><add>1;-<div><prod>G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)</prod>;<prod>G(0,0);G(1,0);G(3,0.0);G(4,0.0);</prod></div>;</add>;<prod>G(0,0);G(1,1);G(3,0.0);G(4,0.0);</prod></prod>',
+...
+```
+The symbolic form can be interpreted like a HTML code. Use `BeautifulSoup` to prettify the output. 
+
+```
+	import numpy as np
+	from bs4 import BeautifulSoup
+
+	symbols = "<prod><add>1;-<div><prod>G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)</prod>;<prod>G(0,0);G(1,0);G(2,0.0);G(3,0.0);</prod></div>;</add>;<prod>G(0,0);G(1,1);G(2,0.0);G(3,0.0);</prod></prod>"
+
+	soup = BeautifulSoup(symbols, 'html.parser')
+	soup.prettify()
+	# 
+		<prod>
+		 <add>
+		  1;-
+		  <div>
+		   <prod>
+		    G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)
+		   </prod>
+		   ;
+		   <prod>
+		    G(0,0);G(1,0);G(2,0.0);G(3,0.0);
+		   </prod>
+		  </div>
+		  ;
+		 </add>
+		 ;
+		 <prod>
+		  G(0,0);G(1,1);G(2,0.0);G(3,0.0);
+		 </prod>
+		</prod>
+
+```
+
+
+
+

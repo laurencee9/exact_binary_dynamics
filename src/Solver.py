@@ -17,6 +17,11 @@ class Solver:
 	##########################################################
 	def __configure(self):
 
+		if "symbolic" in self.params:
+			self.symbolic_ = self.params["symbolic"]
+		else:
+			self.symbolic_ = False
+		
 		self.__load_edgelist()
 		self.__configure_response_function()
 		return
@@ -33,6 +38,8 @@ class Solver:
 		"""
 		Configure the response function
 		"""	
+		if self.symbolic_:
+			return
 		rf = self.params["response_function"]
 		F = {}
 		for rf_case in rf:
@@ -58,6 +65,7 @@ class Solver:
 		"""
 		return 1 if (u in G.neighbors(v)) else 0
 
+
 	def list_to_string(self, config):
 		"""
 		Convert a list of elements ot a string. No separetor between elements.
@@ -79,6 +87,7 @@ class Solver:
 	##########################################################
 	# COMPUTATION
 	##########################################################
+
 	def get_probabilities_Q(self):
 		"""
 		Give the probability Q for each possible configuration.
@@ -112,8 +121,11 @@ class Solver:
 		#Get the seed nodes
 		seed_nodes = set()
 		for node in self.G.nodes():
-			if self.G.node[node]["rf"].resp_func(0)>0.0:
+			if self.symbolic_ == True:
 				seed_nodes.add(node)
+			else:
+				if self.G.node[node]["rf"].resp_func(0)>0.0:
+					seed_nodes.add(node)
 
 		#Initial configuration : All nodes are inactive
 		initial_config = [0]*N
@@ -187,8 +199,11 @@ class Solver:
 
 		#Initial configuration
 		initial_config = [0]*N
-		dict_config[self.list_to_string(initial_config)] = np.float128(np.product([(1.0-self.G.node[node]["rf"].resp_func(0)) for node in self.G.nodes()]))
-	
+		if self.symbolic_:
+			dict_config[self.list_to_string(initial_config)] = "<prod>"+";".join(["G("+str(node)+","+str(0)+")" for node in self.G.nodes()])+"</prod>"
+		else:
+			dict_config[self.list_to_string(initial_config)] = np.float128(np.product([(1.0-self.G.node[node]["rf"].resp_func(0)) for node in self.G.nodes()]))
+
 		for size in range(1,N+1):
 
 			if size in possible_config_ordered_by_size:
@@ -245,15 +260,27 @@ class Solver:
 		N = len(self.G.nodes())
 		config = list(config_str)
 		size_of_config = np.sum([int(i) for i in config])
-		cst = 1.0
+		if self.symbolic_:
+			cst = "<prod>"
+		else:
+			cst = 1.0
+
 
 		for node in self.G.nodes():
 			if config[node] == "0" :
 				m = np.sum([int(config[neigh]) for neigh in self.G.neighbors(node)])
-				cst *= (1.0-self.G.node[node]["rf"].resp_func(m))
+				if self.symbolic_:
+					cst += "G("+str(node)+","+str(m)+");"  
+				else:
+					cst *= (1.0-self.G.node[node]["rf"].resp_func(m))
 
 		#Get Q(l|l)
-		Q_ll = 1.0
+		if self.symbolic_:
+			cst += "</prod>"
+			Q_ll = "<add>1;"
+		else:
+			Q_ll = 1.0
+
 		allU_str = self.get_all_smaller_permutations(config_str, possible_configs)
 
 
@@ -265,16 +292,30 @@ class Solver:
 
 
 		for u in allU:
-			cst2 = 1.0 
+			if self.symbolic_:
+				cst2 = "<prod>"
+			else:
+				cst2 = 1.0
 			for node in self.G.nodes():
 				if config[node] == "0" :
 					m = np.sum([int(u[neigh]) for neigh in self.G.neighbors(node)])
 					# print("node :",node,"  m,",m, "G(m)-",self.G.node[node]["rf"].resp_func(m))
-					cst2 *= (1.0-self.G.node[node]["rf"].resp_func(m))
-			# print("u ",u, "  cst2 ",cst2)
-			Q_ll -= dict_config[self.list_to_string(u)]/cst2
+					if self.symbolic_:
+						cst2 += "G("+str(node)+","+str(m)+");"  
+					else:
+						cst2 *= (1.0-self.G.node[node]["rf"].resp_func(m))
 
-		return Q_ll*cst
+			if self.symbolic_:
+				cst2 += "</prod>"
+				Q_ll += "-<div>"+dict_config[self.list_to_string(u)]+";"+cst2+"</div>;"
+			else:
+				Q_ll -= dict_config[self.list_to_string(u)]/cst2
+
+		if self.symbolic_:
+			return "<prod>"+Q_ll+"</add>"+";"+cst+"</prod>"
+		else:
+			return Q_ll*cst
+	
 
 	def get_all_smaller_permutations(self, config_str, possible_configs):
 		"""
