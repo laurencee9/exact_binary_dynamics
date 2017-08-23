@@ -28,22 +28,7 @@ The output of `solver.get_probabilities_Q()` is a dictionnary where keys are the
  '01110': -3.5575383784680611984e-21,
  '01111': 1.8973538018496326391e-20,
  '11001': -5.4887734982078661633e-20,
- '11000': 0.027000000000000005414,
- '10000': 0.081000000000000003455,
- '11011': 9.1479558303464436055e-20,
- '01101': -1.4230153513872244794e-20,
- '01100': 0.021000000000000002999,
- '01011': 0.0,
- '11100': 0.0090000000000000029588,
- '11101': 1.1604351377383914645e-19,
- '11010': -4.8789097761847699229e-20,
- '01010': 0.0,
- '01000': 0.062999999999999999075,
- '01001': 0.0,
- '00000': 0.72899999999999998655,
- '11110': 6.1833405149563924752e-20,
- '00100': 0.062999999999999999075,
- '10100': 0.0070000000000000004227
+	...
  }
 ```
 
@@ -52,7 +37,7 @@ The output of `solver.get_probabilities_Q()` is a dictionnary where keys are the
 The algorithm needs some parameters to run. We use a dictionnary to feed the parameters. 
 ```
 params = {
-	"edgelist_path" : "./edgelist.txt",
+ "edgelist_path" : "./edgelist.txt",
 	"response_function": [
 		{	
 			"name": "bond",
@@ -70,7 +55,6 @@ params = {
 				"p": 0.4
 			}
 		},
-
 	]
 }
 ```
@@ -81,8 +65,11 @@ params = {
 In each element of `params["response_function"]`, you must declare the name of the response function and the nodes that apply to. 
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/master
 ## Symbolic results
 
 It is possible to output the result in a symbolic form. In this case, you do not need to specify the response functions
@@ -92,10 +79,15 @@ It is possible to output the result in a symbolic form. In this case, you do not
 		"edgelist_path" : "./edgelist.txt",
 		"symbolic"      : True
 	}
+<<<<<<< HEAD
 
 	solver = Solver(params)
 	Q = solver.get_probabilities_Q()
 
+=======
+	solver = Solver(params)
+	Q = solver.get_probabilities_Q()
+>>>>>>> origin/master
 ```
 The output will look like
 
@@ -113,6 +105,7 @@ The symbolic form can be interpreted like a HTML code. Use `BeautifulSoup` to pr
 	from bs4 import BeautifulSoup
 
 	symbols = "<prod><add>1;-<div><prod>G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)</prod>;<prod>G(0,0);G(1,0);G(2,0.0);G(3,0.0);</prod></div>;</add>;<prod>G(0,0);G(1,1);G(2,0.0);G(3,0.0);</prod></prod>"
+<<<<<<< HEAD
 
 	soup = BeautifulSoup(symbols, 'html.parser')
 	soup.prettify()
@@ -141,4 +134,49 @@ The symbolic form can be interpreted like a HTML code. Use `BeautifulSoup` to pr
 
 
 
+=======
+	soup = BeautifulSoup(symbols, 'html.parser')
+	soup.prettify()
+```
+which output
+```
+<prod>
+ <add>
+  1;-
+  <div>
+   <prod>
+    G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)
+   </prod>
+   ;
+   <prod>
+    G(0,0);G(1,0);G(2,0.0);G(3,0.0);
+   </prod>
+  </div>
+  ;
+ </add>
+ ;
+ <prod>
+  G(0,0);G(1,1);G(2,0.0);G(3,0.0);
+ </prod>
+</prod>
+```
+The XML format has three tags 
+
+ - `<prod>` : Product
+ - `<add>` : Addition
+ - `<div>` : Division
+ - `G(i,m)` : Means `1-F_i(m)` where `i` is the node index and `m` is the number of active neighbors
+
+where contents are separated by `;`.
+
+For example, 
+
+ - `<prod>G(0,1);G(1,3)</prod>` means `G(0,1)*G(1,3)`
+ - `<add>G(0,1);G(1,3)</add>` means `G(0,1)+G(1,3)`
+ - `<div>G(0,1);G(1,3)</div>` means `G(0,1)/G(1,3)`
+
+And more complex statements should keep the hierarchy, such as
+
+ - `<prod><add>1;G(0,1)</add>;G(2,2)</prod>` means `[1-G(0,1)]*G(2,2)`
+>>>>>>> origin/master
 
