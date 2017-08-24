@@ -65,34 +65,22 @@ params = {
 In each element of `params["response_function"]`, you must declare the name of the response function and the nodes that apply to. 
 
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> origin/master
 ## Symbolic results
 
 It is possible to output the result in a symbolic form. In this case, you do not need to specify the response functions
 
-```
-	params = {
-		"edgelist_path" : "./edgelist.txt",
-		"symbolic"      : True
-	}
-<<<<<<< HEAD
-
-	solver = Solver(params)
-	Q = solver.get_probabilities_Q()
-
-=======
-	solver = Solver(params)
-	Q = solver.get_probabilities_Q()
->>>>>>> origin/master
+```python
+params = {
+	"edgelist_path" : "./edgelist.txt",
+	"symbolic"      : True
+}
+solver = Solver(params)
+Q = solver.get_probabilities_Q()
 ```
 The output will look like
 
 
-```
+```json
 '00001' : '<prod><add>1;-<div><prod>G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)</prod>;<prod>G(0,0);G(1,0);G(2,0.0);G(3,0.0);</prod></div>;</add>;<prod>G(0,0);G(1,1);G(2,0.0);G(3,0.0);</prod></prod>',
 '00000' : '<prod>G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)</prod>',
 '00100' : '<prod><add>1;-<div><prod>G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)</prod>;<prod>G(0,0);G(1,0);G(3,0.0);G(4,0.0);</prod></div>;</add>;<prod>G(0,0);G(1,1);G(3,0.0);G(4,0.0);</prod></prod>',
@@ -100,46 +88,16 @@ The output will look like
 ```
 The symbolic form can be interpreted like a HTML code. Use `BeautifulSoup` to prettify the output. 
 
-```
-	import numpy as np
-	from bs4 import BeautifulSoup
+```python
+import numpy as np
+from bs4 import BeautifulSoup
 
-	symbols = "<prod><add>1;-<div><prod>G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)</prod>;<prod>G(0,0);G(1,0);G(2,0.0);G(3,0.0);</prod></div>;</add>;<prod>G(0,0);G(1,1);G(2,0.0);G(3,0.0);</prod></prod>"
-<<<<<<< HEAD
-
-	soup = BeautifulSoup(symbols, 'html.parser')
-	soup.prettify()
-	# 
-		<prod>
-		 <add>
-		  1;-
-		  <div>
-		   <prod>
-		    G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)
-		   </prod>
-		   ;
-		   <prod>
-		    G(0,0);G(1,0);G(2,0.0);G(3,0.0);
-		   </prod>
-		  </div>
-		  ;
-		 </add>
-		 ;
-		 <prod>
-		  G(0,0);G(1,1);G(2,0.0);G(3,0.0);
-		 </prod>
-		</prod>
-
+symbols = "<prod><add>1;-<div><prod>G(0,0);G(1,0);G(2,0);G(3,0);G(4,0)</prod>;<prod>G(0,0);G(1,0);G(2,0.0);G(3,0.0);</prod></div>;</add>;<prod>G(0,0);G(1,1);G(2,0.0);G(3,0.0);</prod></prod>"
+soup = BeautifulSoup(symbols, 'html.parser')
+soup.prettify()
 ```
 
-
-
-=======
-	soup = BeautifulSoup(symbols, 'html.parser')
-	soup.prettify()
-```
-which output
-```
+```xml
 <prod>
  <add>
   1;-
@@ -160,23 +118,23 @@ which output
  </prod>
 </prod>
 ```
+
 The XML format has three tags 
 
- - `<prod>` : Product
- - `<add>` : Addition
- - `<div>` : Division
- - `G(i,m)` : Means `1-F_i(m)` where `i` is the node index and `m` is the number of active neighbors
+ * `<prod>` : Product
+ * `<add>` : Addition
+ * `<div>` : Division
+ * `G(i,m)` : Means `1-F_i(m)` where `i` is the node index and `m` is the number of active neighbors
 
 where contents are separated by `;`.
 
 For example, 
 
- - `<prod>G(0,1);G(1,3)</prod>` means `G(0,1)*G(1,3)`
- - `<add>G(0,1);G(1,3)</add>` means `G(0,1)+G(1,3)`
- - `<div>G(0,1);G(1,3)</div>` means `G(0,1)/G(1,3)`
+ * `<prod>G(0,1);G(1,3)</prod>` means `G(0,1)*G(1,3)`
+ * `<add>G(0,1);G(1,3)</add>` means `G(0,1)+G(1,3)`
+ * `<div>G(0,1);G(1,3)</div>` means `G(0,1)/G(1,3)`
 
 And more complex statements should keep the hierarchy, such as
 
- - `<prod><add>1;G(0,1)</add>;G(2,2)</prod>` means `[1-G(0,1)]*G(2,2)`
->>>>>>> origin/master
+ * `<prod><add>1;G(0,1)</add>;G(2,2)</prod>` means `[1-G(0,1)]*G(2,2)`
 
