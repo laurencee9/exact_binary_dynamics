@@ -31,7 +31,7 @@ class Solver:
 		Load the graph
 		"""	
 		self.G = nx.read_edgelist(self.params["edgelist_path"],create_using=nx.DiGraph())
-		self.G = nx.convert_node_labels_to_integers(self.G, first_label=0,ordering="sorted")
+		# self.G = nx.convert_node_labels_to_integers(self.G, first_label=0,ordering="sorted")
 		return
 
 	def __configure_response_function(self):
@@ -44,7 +44,7 @@ class Solver:
 		F = {}
 		for rf_case in rf:
 			for node in rf_case["nodes"]:
-				F[node] = RF(rf_case)
+				F[str(node)] = RF(rf_case)
 
 		nx.set_node_attributes(self.G,"rf",F)
 		return 
@@ -102,7 +102,6 @@ class Solver:
 		Q = self.get_probabilities_Q_possible(possible_configs)
 		return Q
 
-
 	def get_possible_configurations(self):
 		"""
 		Get all the possible configurations of the graph.
@@ -147,7 +146,7 @@ class Solver:
 					#Update the config
 					new_config = config
 					list_new = list(new_config)
-					list_new[node]= "1"
+					list_new[int(node)]= "1"
 					new_config = "".join(list_new)
 
 					#Adjacent
@@ -155,7 +154,7 @@ class Solver:
 					adjacent_nodes.remove(node)
 					for neighbors in self.G.neighbors(node):
 						#Check that adjacent_nodes are not already active
-						if list_new[neighbors] != "1":
+						if list_new[int(neighbors)] != "1":
 							adjacent_nodes.add(neighbors)
 
 					#Update dict and lists
@@ -191,7 +190,7 @@ class Solver:
 		"""
 		#the master dictionnary
 		dict_config = {}
-
+		prob_tot = 1.0
 		#order by size to simplify the calculation
 		possible_config_ordered_by_size = self.regroup_config_by_size(possible_configs)
 
@@ -203,15 +202,17 @@ class Solver:
 			dict_config[self.list_to_string(initial_config)] = "<prod>"+";".join(["G("+str(node)+","+str(0)+")" for node in self.G.nodes()])+"</prod>"
 		else:
 			dict_config[self.list_to_string(initial_config)] = np.float128(np.product([(1.0-self.G.node[node]["rf"].resp_func(0)) for node in self.G.nodes()]))
+			prob_tot -= dict_config[self.list_to_string(initial_config)]
 
 		for size in range(1,N+1):
-
 			if size in possible_config_ordered_by_size:
 				for config_str in possible_config_ordered_by_size[size]:
 
 					Q_ln = self.solve_specific_configuration(config_str, dict_config, possible_configs)
 					dict_config[config_str] = Q_ln
+					prob_tot -= Q_ln
 
+		dict_config["1"*N] = prob_tot
 		return dict_config
 
 	def regroup_config_by_size(self, possible_configs):
@@ -267,8 +268,8 @@ class Solver:
 
 
 		for node in self.G.nodes():
-			if config[node] == "0" :
-				m = np.sum([int(config[neigh]) for neigh in self.G.neighbors(node)])
+			if config[int(node)] == "0" :
+				m = np.sum([int(config[int(neigh)]) for neigh in self.G.neighbors(node)])
 				if self.symbolic_:
 					cst += "G("+str(node)+","+str(m)+");"  
 				else:
@@ -297,8 +298,8 @@ class Solver:
 			else:
 				cst2 = 1.0
 			for node in self.G.nodes():
-				if config[node] == "0" :
-					m = np.sum([int(u[neigh]) for neigh in self.G.neighbors(node)])
+				if config[int(node)] == "0" :
+					m = np.sum([int(u[int(neigh)]) for neigh in self.G.neighbors(node)])
 					# print("node :",node,"  m,",m, "G(m)-",self.G.node[node]["rf"].resp_func(m))
 					if self.symbolic_:
 						cst2 += "G("+str(node)+","+str(m)+");"  
@@ -309,12 +310,16 @@ class Solver:
 				cst2 += "</prod>"
 				Q_ll += "-<div>"+dict_config[self.list_to_string(u)]+";"+cst2+"</div>;"
 			else:
-				Q_ll -= dict_config[self.list_to_string(u)]/cst2
+				if cst2!=0.0:
+					Q_ll -= dict_config[self.list_to_string(u)]/cst2
 
 		if self.symbolic_:
 			return "<prod>"+Q_ll+"</add>"+";"+cst+"</prod>"
 		else:
-			return Q_ll*cst
+			if cst2==0:
+				return 0.0
+			else:
+				return Q_ll*cst
 	
 
 	def get_all_smaller_permutations(self, config_str, possible_configs):

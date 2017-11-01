@@ -47,7 +47,8 @@ class ResponseFunction:
 
 		"""
 		if m > 0:
-			return np.float128(1.0) - np.float128((1.0 - self.params["params"]["p"]) ** m)
+			return (np.float128(1.0) - np.float128((1.0 - self.params["params"]["p"]) ** m)*(1.0-np.float128(self.params["params"]["p_spontaneous"])))
 		else:
 			return np.float128(self.params["params"]["p_spontaneous"])
+
 
