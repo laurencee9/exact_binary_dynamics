@@ -90,27 +90,19 @@ params = {
 	"response_function": [
 		{	
 			"name": "bond",
-			"nodes": [0,6,9],
+			"nodes": [1,5,11],
 			"params": {
-				"p": 0.9,
-				"p_spontaneous": 0.6
+				"p": 0.3,
+				"p_spontaneous": 0.4
 			}
 
 		},
 		{	
 			"name": "bond",
-			"nodes": [1,5,11],
+			"nodes": [0,6,9],
 			"params": {
-				"p": 0.7,
-				"p_spontaneous": 0.4
-			}
-		},
-		{	
-			"name": "watts",
-			"nodes": [3,7,10],
-			"params": {
-				"p": 0.7,
-				"threshold": 1
+				"p": 0.1,
+				"p_spontaneous": 0.6
 			}
 		},
 		{	
@@ -121,7 +113,14 @@ params = {
 				"threshold": 2
 			}
 		},
-
+		{	
+			"name": "watts",
+			"nodes": [3,7,10],
+			"params": {
+				"p": 0.7,
+				"threshold": 1
+			}
+		}
 	]
 }
 

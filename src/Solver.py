@@ -46,7 +46,8 @@ class Solver:
 			for node in rf_case["nodes"]:
 				F[str(node)] = RF(rf_case)
 
-		nx.set_node_attributes(self.G,"rf",F)
+		
+		nx.set_node_attributes(self.G,name="rf", values=F)
 		return 
 
 	##########################################################
@@ -123,7 +124,7 @@ class Solver:
 			if self.symbolic_ == True:
 				seed_nodes.add(node)
 			else:
-				if self.G.node[node]["rf"].resp_func(0)>0.0:
+				if self.G.nodes[node]["rf"].resp_func(0)>0.0:
 					seed_nodes.add(node)
 
 		#Initial configuration : All nodes are inactive
@@ -201,7 +202,7 @@ class Solver:
 		if self.symbolic_:
 			dict_config[self.list_to_string(initial_config)] = "<prod>"+";".join(["G("+str(node)+","+str(0)+")" for node in self.G.nodes()])+"</prod>"
 		else:
-			dict_config[self.list_to_string(initial_config)] = np.float128(np.product([(1.0-self.G.node[node]["rf"].resp_func(0)) for node in self.G.nodes()]))
+			dict_config[self.list_to_string(initial_config)] = np.float128(np.product([(1.0-self.G.nodes[node]["rf"].resp_func(0)) for node in self.G.nodes()]))
 			prob_tot -= dict_config[self.list_to_string(initial_config)]
 
 		for size in range(1,N+1):
