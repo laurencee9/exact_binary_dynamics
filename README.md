@@ -16,12 +16,12 @@ A python implementation of the exact solution of irreversible binary dynamics on
 
 ### Solver
 
-After having declared your paramters, you must initiate an instance and run the algorithm:
+After having declared your parameters, you must initiate an instance and run the algorithm:
 
 	solver = Solver(params)
 	Q = solver.get_probabilities_Q()
 
-The output of `solver.get_probabilities_Q()` is a dictionnary where keys are the configurations as strings (e.g. "101011011") and value are the probability of getting the key configuration. For example, the output could look like:
+The output of `solver.get_probabilities_Q()` is a dictionary where keys are the configurations as strings (e.g. "101011011") and values are the probabilities of getting the key configuration. For example, the output could look like:
 
 ```
 {
@@ -34,7 +34,7 @@ The output of `solver.get_probabilities_Q()` is a dictionnary where keys are the
 
 ### Parameters
 
-The algorithm needs some parameters to run. We use a dictionnary to feed the parameters. 
+The algorithm needs some parameters to run. We use a dictionary to feed the parameters. 
 ```
 params = {
  "edgelist_path" : "./edgelist.txt",
