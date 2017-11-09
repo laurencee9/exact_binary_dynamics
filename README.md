@@ -2,7 +2,7 @@
 
 
 
-![](mixed.png)
+![](outcome.png)
 
 
 A python implementation of the exact solution of irreversible binary dynamics on networks.
