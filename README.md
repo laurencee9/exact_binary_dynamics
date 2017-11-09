@@ -1,6 +1,9 @@
-# Exact analytical solution of irreversible binary dynamics on networks
+# Exact analytical solution of irreversible binary dynamics on networks [![Build Status](https://travis-ci.com/laurencee9/exact_binary_dynamics.svg?token=G5JxCbxXbihVEq3Yzsxg&branch=master)](https://travis-ci.com/laurencee9/exact_binary_dynamics)
 
-[![Build Status](https://travis-ci.com/laurencee9/exact_binary_dynamics.svg?token=G5JxCbxXbihVEq3Yzsxg&branch=master)](https://travis-ci.com/laurencee9/exact_binary_dynamics)
+
+
+![](mixed.png)
+
 
 A python implementation of the exact solution of irreversible binary dynamics on networks.
 
@@ -138,3 +141,12 @@ And more complex statements should keep the hierarchy, such as
 
  * `<prod><add>1;G(0,1)</add>;G(2,2)</prod>` means `[1-G(0,1)]*G(2,2)`
 
+## Publications
+
+Please cite:
+
+"*Exact analytical solution of irreversible binary dynamics on networks*"<br/>
+[E. Laurence](http://edwardlaurence.me/), [J.-G. Young](http://jgyoung.ca), [S. Melnik](https://scholar.google.com/citations?user=uF3-t9EAAAAJ), and [L. J. Dubé](https://www.dynamica.phy.ulaval.ca/index.php?id=contact)<br/>
+arXiv:1711.02721<br/>
+
+Read it on: [arXiv](https://arxiv.org/abs/1711.02721)
