@@ -147,6 +147,7 @@ Please cite:
 
 "*Exact analytical solution of irreversible binary dynamics on networks*"<br/>
 [E. Laurence](http://edwardlaurence.me/), [J.-G. Young](http://jgyoung.ca), [S. Melnik](https://scholar.google.com/citations?user=uF3-t9EAAAAJ), and [L. J. Dubé](https://www.dynamica.phy.ulaval.ca/index.php?id=contact)<br/>
-arXiv:1711.02721<br/>
+Phys. Rev. E. **97**, 032302 (2008)<br/>
+DOI: [10.1103/PhysRevE.97.032302](https://doi.org/10.1103/PhysRevE.97.032302)
 
 Read it on: [arXiv](https://arxiv.org/abs/1711.02721)
